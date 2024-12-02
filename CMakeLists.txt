@@ -1,0 +1,9 @@
+cmake_minimum_required(VERSION 3.5)
+
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/lib")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/bin")
+include_directories("${PROJECT_SOURCE_DIR}/include")
+include_directories("${PROJECT_SOURCE_DIR}/third_party/include")
+link_libraries("${PROJECT_SOURCE_DIR}/lib")
+link_directories("${PROJECT_SOURCE_DIR}/third_party/lib")
+add_subdirectory(src)
