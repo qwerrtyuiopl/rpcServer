@@ -89,6 +89,9 @@ class TcpServer : noncopyable
   void setWriteCompleteCallback(const WriteCompleteCallback& cb)
   { writeCompleteCallback_ = cb; }
 
+  //主动添加一个已连接的socket
+  void addConnection(int sockfd, const InetAddress& peerAddr);
+  
  private:
   /// Not thread safe, but in loop
   void newConnection(int sockfd, const InetAddress& peerAddr);
