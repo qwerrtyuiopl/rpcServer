@@ -1,3 +1,4 @@
+#pragma once
 #include <pthread.h>
 #include <vector>
 #include <functional>
@@ -67,6 +68,7 @@ namespace rpc
         static void *run(void *thread)
         {
             ((RpcThread *)thread)->task();
+            return nullptr;
         }
         void task()
         {

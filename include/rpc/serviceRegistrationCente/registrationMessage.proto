@@ -1,0 +1,14 @@
+syntax = "proto3";
+import "Ip.proto";
+package rpc;
+
+message RegistrationRequest
+{
+    repeated string requestedService=1;
+    repeated string providedService=2;
+}
+
+message RegistrationResponse
+{
+    repeated Ip ip=1;
+}

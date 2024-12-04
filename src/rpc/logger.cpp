@@ -1,8 +1,5 @@
 #include "logger.h"
 
-rpc::Logger::Logger(const std::string &logPath)
-{
-}
 
 void rpc::Logger::updata(muduo::Timestamp time)
 {
