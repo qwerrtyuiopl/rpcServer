@@ -5,11 +5,16 @@
 #include <semaphore.h>
 #include <muduo/base/CurrentThread.h>
 #include <muduo/base/Mutex.h>
+#include <unistd.h>
+#include <unordered_map>
+#include <unordered_set>
 namespace rpc
 {
     class RpcThread
     {
     public:
+        RpcThread(const RpcThread &) = delete;
+        RpcThread &operator=(const RpcThread &) = delete;
         RpcThread()
         {
             sem_init(&_sem, 0, 0);
@@ -17,11 +22,11 @@ namespace rpc
         bool isInThread() const { return _threadId == muduo::CurrentThread::tid(); }
         bool runInThread(std::function<void()> cb)
         {
-            if (isInThread)
+            if (isInThread())
             {
                 cb();
             }
-            else if(!_isStart)
+            else if (!_isStart)
             {
                 return false;
             }
@@ -31,6 +36,12 @@ namespace rpc
                 _functions.push_back(std::move(cb));
             }
             return true;
+        }
+        pid_t get_pid() const
+        {
+            if (_isStart)
+                return _threadId;
+            return -1;
         }
         /*
         线程不安全
@@ -48,9 +59,10 @@ namespace rpc
         }
         void stop()
         {
-            _isStart=false;
-            pthread_join(_thread,nullptr);
+            _isStart = false;
+            pthread_join(_thread, nullptr);
         }
+
     private:
         static void *run(void *thread)
         {
@@ -64,6 +76,8 @@ namespace rpc
             while (_isStart || !_functions.empty())
             {
                 std::vector<std::function<void()>> functions;
+                while (!_functions.size())
+                    usleep(10);
                 _functions.swap(functions); // 加锁？
                 for (auto it = functions.begin(); it != functions.end(); it++)
                 {
@@ -93,7 +107,8 @@ namespace rpc
             static RpcThreadPool instance; // 局部静态变量，线程安全且只初始化一次
             return instance;
         }
-        
+        RpcThread &get_RpcThread();
+
     private:
         RpcThreadPool()
         {
@@ -102,6 +117,10 @@ namespace rpc
         {
         }
         RpcThreadPool(RpcThreadPool &&) = delete;
+
+    private:
+        std::unordered_map<pid_t, RpcThread> _rpcThreadMap;
+        std::unordered_set<pid_t> _threadIds;
     };
 
 }
