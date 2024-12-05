@@ -2,9 +2,8 @@ syntax = "proto3";
 
 package rpc;
 
-message Header
+message MessageHeader
 {
     uint32 request_size=1;
-    uint32 Response_size=2;
     uint32 arg_size=3;
 }

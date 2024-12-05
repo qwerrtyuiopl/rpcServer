@@ -25,6 +25,7 @@ PROTOBUF_CONSTEXPR RegistrationRequest::RegistrationRequest(
     ::_pbi::ConstantInitialized): _impl_{
     /*decltype(_impl_.requestedservice_)*/{}
   , /*decltype(_impl_.providedservice_)*/{}
+  , /*decltype(_impl_.nginxip_)*/nullptr
   , /*decltype(_impl_._cached_size_)*/{}} {}
 struct RegistrationRequestDefaultTypeInternal {
   PROTOBUF_CONSTEXPR RegistrationRequestDefaultTypeInternal()
@@ -38,6 +39,7 @@ PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORIT
 PROTOBUF_CONSTEXPR RegistrationResponse::RegistrationResponse(
     ::_pbi::ConstantInitialized): _impl_{
     /*decltype(_impl_.ip_)*/{}
+  , /*decltype(_impl_.service_)*/{}
   , /*decltype(_impl_._cached_size_)*/{}} {}
 struct RegistrationResponseDefaultTypeInternal {
   PROTOBUF_CONSTEXPR RegistrationResponseDefaultTypeInternal()
@@ -62,6 +64,7 @@ const uint32_t TableStruct_registrationMessage_2eproto::offsets[] PROTOBUF_SECTI
   ~0u,  // no _inlined_string_donated_
   PROTOBUF_FIELD_OFFSET(::rpc::RegistrationRequest, _impl_.requestedservice_),
   PROTOBUF_FIELD_OFFSET(::rpc::RegistrationRequest, _impl_.providedservice_),
+  PROTOBUF_FIELD_OFFSET(::rpc::RegistrationRequest, _impl_.nginxip_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::rpc::RegistrationResponse, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -69,10 +72,11 @@ const uint32_t TableStruct_registrationMessage_2eproto::offsets[] PROTOBUF_SECTI
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
   PROTOBUF_FIELD_OFFSET(::rpc::RegistrationResponse, _impl_.ip_),
+  PROTOBUF_FIELD_OFFSET(::rpc::RegistrationResponse, _impl_.service_),
 };
 static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, -1, sizeof(::rpc::RegistrationRequest)},
-  { 8, -1, -1, sizeof(::rpc::RegistrationResponse)},
+  { 9, -1, -1, sizeof(::rpc::RegistrationResponse)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
@@ -82,17 +86,18 @@ static const ::_pb::Message* const file_default_instances[] = {
 
 const char descriptor_table_protodef_registrationMessage_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
   "\n\031registrationMessage.proto\022\003rpc\032\010Ip.pro"
-  "to\"H\n\023RegistrationRequest\022\030\n\020requestedSe"
-  "rvice\030\001 \003(\t\022\027\n\017providedService\030\002 \003(\t\"+\n\024"
-  "RegistrationResponse\022\023\n\002ip\030\001 \003(\0132\007.rpc.I"
-  "pb\006proto3"
+  "to\"b\n\023RegistrationRequest\022\030\n\020requestedSe"
+  "rvice\030\001 \003(\t\022\027\n\017providedService\030\002 \003(\t\022\030\n\007"
+  "nginxIp\030\003 \001(\0132\007.rpc.Ip\"<\n\024RegistrationRe"
+  "sponse\022\023\n\002ip\030\001 \003(\0132\007.rpc.Ip\022\017\n\007service\030\002"
+  " \003(\tb\006proto3"
   ;
 static const ::_pbi::DescriptorTable* const descriptor_table_registrationMessage_2eproto_deps[1] = {
   &::descriptor_table_Ip_2eproto,
 };
 static ::_pbi::once_flag descriptor_table_registrationMessage_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_registrationMessage_2eproto = {
-    false, false, 169, descriptor_table_protodef_registrationMessage_2eproto,
+    false, false, 212, descriptor_table_protodef_registrationMessage_2eproto,
     "registrationMessage.proto",
     &descriptor_table_registrationMessage_2eproto_once, descriptor_table_registrationMessage_2eproto_deps, 1, 2,
     schemas, file_default_instances, TableStruct_registrationMessage_2eproto::offsets,
@@ -111,8 +116,19 @@ namespace rpc {
 
 class RegistrationRequest::_Internal {
  public:
+  static const ::rpc::Ip& nginxip(const RegistrationRequest* msg);
 };
 
+const ::rpc::Ip&
+RegistrationRequest::_Internal::nginxip(const RegistrationRequest* msg) {
+  return *msg->_impl_.nginxip_;
+}
+void RegistrationRequest::clear_nginxip() {
+  if (GetArenaForAllocation() == nullptr && _impl_.nginxip_ != nullptr) {
+    delete _impl_.nginxip_;
+  }
+  _impl_.nginxip_ = nullptr;
+}
 RegistrationRequest::RegistrationRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
@@ -125,9 +141,13 @@ RegistrationRequest::RegistrationRequest(const RegistrationRequest& from)
   new (&_impl_) Impl_{
       decltype(_impl_.requestedservice_){from._impl_.requestedservice_}
     , decltype(_impl_.providedservice_){from._impl_.providedservice_}
+    , decltype(_impl_.nginxip_){nullptr}
     , /*decltype(_impl_._cached_size_)*/{}};
 
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  if (from._internal_has_nginxip()) {
+    _this->_impl_.nginxip_ = new ::rpc::Ip(*from._impl_.nginxip_);
+  }
   // @@protoc_insertion_point(copy_constructor:rpc.RegistrationRequest)
 }
 
@@ -138,6 +158,7 @@ inline void RegistrationRequest::SharedCtor(
   new (&_impl_) Impl_{
       decltype(_impl_.requestedservice_){arena}
     , decltype(_impl_.providedservice_){arena}
+    , decltype(_impl_.nginxip_){nullptr}
     , /*decltype(_impl_._cached_size_)*/{}
   };
 }
@@ -155,6 +176,7 @@ inline void RegistrationRequest::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
   _impl_.requestedservice_.~RepeatedPtrField();
   _impl_.providedservice_.~RepeatedPtrField();
+  if (this != internal_default_instance()) delete _impl_.nginxip_;
 }
 
 void RegistrationRequest::SetCachedSize(int size) const {
@@ -169,6 +191,10 @@ void RegistrationRequest::Clear() {
 
   _impl_.requestedservice_.Clear();
   _impl_.providedservice_.Clear();
+  if (GetArenaForAllocation() == nullptr && _impl_.nginxip_ != nullptr) {
+    delete _impl_.nginxip_;
+  }
+  _impl_.nginxip_ = nullptr;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -205,6 +231,14 @@ const char* RegistrationRequest::_InternalParse(const char* ptr, ::_pbi::ParseCo
             CHK_(::_pbi::VerifyUTF8(str, "rpc.RegistrationRequest.providedService"));
             if (!ctx->DataAvailable(ptr)) break;
           } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<18>(ptr));
+        } else
+          goto handle_unusual;
+        continue;
+      // .rpc.Ip nginxIp = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 26)) {
+          ptr = ctx->ParseMessage(_internal_mutable_nginxip(), ptr);
+          CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
@@ -257,6 +291,13 @@ uint8_t* RegistrationRequest::_InternalSerialize(
     target = stream->WriteString(2, s, target);
   }
 
+  // .rpc.Ip nginxIp = 3;
+  if (this->_internal_has_nginxip()) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(3, _Internal::nginxip(this),
+        _Internal::nginxip(this).GetCachedSize(), target, stream);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
@@ -289,6 +330,13 @@ size_t RegistrationRequest::ByteSizeLong() const {
       _impl_.providedservice_.Get(i));
   }
 
+  // .rpc.Ip nginxIp = 3;
+  if (this->_internal_has_nginxip()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+        *_impl_.nginxip_);
+  }
+
   return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
@@ -309,6 +357,10 @@ void RegistrationRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, co
 
   _this->_impl_.requestedservice_.MergeFrom(from._impl_.requestedservice_);
   _this->_impl_.providedservice_.MergeFrom(from._impl_.providedservice_);
+  if (from._internal_has_nginxip()) {
+    _this->_internal_mutable_nginxip()->::rpc::Ip::MergeFrom(
+        from._internal_nginxip());
+  }
   _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
@@ -328,6 +380,7 @@ void RegistrationRequest::InternalSwap(RegistrationRequest* other) {
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   _impl_.requestedservice_.InternalSwap(&other->_impl_.requestedservice_);
   _impl_.providedservice_.InternalSwap(&other->_impl_.providedservice_);
+  swap(_impl_.nginxip_, other->_impl_.nginxip_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata RegistrationRequest::GetMetadata() const {
@@ -356,6 +409,7 @@ RegistrationResponse::RegistrationResponse(const RegistrationResponse& from)
   RegistrationResponse* const _this = this; (void)_this;
   new (&_impl_) Impl_{
       decltype(_impl_.ip_){from._impl_.ip_}
+    , decltype(_impl_.service_){from._impl_.service_}
     , /*decltype(_impl_._cached_size_)*/{}};
 
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
@@ -368,6 +422,7 @@ inline void RegistrationResponse::SharedCtor(
   (void)is_message_owned;
   new (&_impl_) Impl_{
       decltype(_impl_.ip_){arena}
+    , decltype(_impl_.service_){arena}
     , /*decltype(_impl_._cached_size_)*/{}
   };
 }
@@ -384,6 +439,7 @@ RegistrationResponse::~RegistrationResponse() {
 inline void RegistrationResponse::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
   _impl_.ip_.~RepeatedPtrField();
+  _impl_.service_.~RepeatedPtrField();
 }
 
 void RegistrationResponse::SetCachedSize(int size) const {
@@ -397,6 +453,7 @@ void RegistrationResponse::Clear() {
   (void) cached_has_bits;
 
   _impl_.ip_.Clear();
+  _impl_.service_.Clear();
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -416,6 +473,21 @@ const char* RegistrationResponse::_InternalParse(const char* ptr, ::_pbi::ParseC
             CHK_(ptr);
             if (!ctx->DataAvailable(ptr)) break;
           } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<10>(ptr));
+        } else
+          goto handle_unusual;
+        continue;
+      // repeated string service = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 18)) {
+          ptr -= 1;
+          do {
+            ptr += 1;
+            auto str = _internal_add_service();
+            ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
+            CHK_(ptr);
+            CHK_(::_pbi::VerifyUTF8(str, "rpc.RegistrationResponse.service"));
+            if (!ctx->DataAvailable(ptr)) break;
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<18>(ptr));
         } else
           goto handle_unusual;
         continue;
@@ -456,6 +528,16 @@ uint8_t* RegistrationResponse::_InternalSerialize(
         InternalWriteMessage(1, repfield, repfield.GetCachedSize(), target, stream);
   }
 
+  // repeated string service = 2;
+  for (int i = 0, n = this->_internal_service_size(); i < n; i++) {
+    const auto& s = this->_internal_service(i);
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      s.data(), static_cast<int>(s.length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "rpc.RegistrationResponse.service");
+    target = stream->WriteString(2, s, target);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
@@ -479,6 +561,14 @@ size_t RegistrationResponse::ByteSizeLong() const {
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
   }
 
+  // repeated string service = 2;
+  total_size += 1 *
+      ::PROTOBUF_NAMESPACE_ID::internal::FromIntSize(_impl_.service_.size());
+  for (int i = 0, n = _impl_.service_.size(); i < n; i++) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+      _impl_.service_.Get(i));
+  }
+
   return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
@@ -498,6 +588,7 @@ void RegistrationResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, c
   (void) cached_has_bits;
 
   _this->_impl_.ip_.MergeFrom(from._impl_.ip_);
+  _this->_impl_.service_.MergeFrom(from._impl_.service_);
   _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
@@ -516,6 +607,7 @@ void RegistrationResponse::InternalSwap(RegistrationResponse* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   _impl_.ip_.InternalSwap(&other->_impl_.ip_);
+  _impl_.service_.InternalSwap(&other->_impl_.service_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata RegistrationResponse::GetMetadata() const {

@@ -184,6 +184,7 @@ class RegistrationRequest final :
   enum : int {
     kRequestedServiceFieldNumber = 1,
     kProvidedServiceFieldNumber = 2,
+    kNginxIpFieldNumber = 3,
   };
   // repeated string requestedService = 1;
   int requestedservice_size() const;
@@ -233,6 +234,24 @@ class RegistrationRequest final :
   std::string* _internal_add_providedservice();
   public:
 
+  // .rpc.Ip nginxIp = 3;
+  bool has_nginxip() const;
+  private:
+  bool _internal_has_nginxip() const;
+  public:
+  void clear_nginxip();
+  const ::rpc::Ip& nginxip() const;
+  PROTOBUF_NODISCARD ::rpc::Ip* release_nginxip();
+  ::rpc::Ip* mutable_nginxip();
+  void set_allocated_nginxip(::rpc::Ip* nginxip);
+  private:
+  const ::rpc::Ip& _internal_nginxip() const;
+  ::rpc::Ip* _internal_mutable_nginxip();
+  public:
+  void unsafe_arena_set_allocated_nginxip(
+      ::rpc::Ip* nginxip);
+  ::rpc::Ip* unsafe_arena_release_nginxip();
+
   // @@protoc_insertion_point(class_scope:rpc.RegistrationRequest)
  private:
   class _Internal;
@@ -243,6 +262,7 @@ class RegistrationRequest final :
   struct Impl_ {
     ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string> requestedservice_;
     ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string> providedservice_;
+    ::rpc::Ip* nginxip_;
     mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   };
   union { Impl_ _impl_; };
@@ -372,6 +392,7 @@ class RegistrationResponse final :
 
   enum : int {
     kIpFieldNumber = 1,
+    kServiceFieldNumber = 2,
   };
   // repeated .rpc.Ip ip = 1;
   int ip_size() const;
@@ -391,6 +412,30 @@ class RegistrationResponse final :
   const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::rpc::Ip >&
       ip() const;
 
+  // repeated string service = 2;
+  int service_size() const;
+  private:
+  int _internal_service_size() const;
+  public:
+  void clear_service();
+  const std::string& service(int index) const;
+  std::string* mutable_service(int index);
+  void set_service(int index, const std::string& value);
+  void set_service(int index, std::string&& value);
+  void set_service(int index, const char* value);
+  void set_service(int index, const char* value, size_t size);
+  std::string* add_service();
+  void add_service(const std::string& value);
+  void add_service(std::string&& value);
+  void add_service(const char* value);
+  void add_service(const char* value, size_t size);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>& service() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>* mutable_service();
+  private:
+  const std::string& _internal_service(int index) const;
+  std::string* _internal_add_service();
+  public:
+
   // @@protoc_insertion_point(class_scope:rpc.RegistrationResponse)
  private:
   class _Internal;
@@ -400,6 +445,7 @@ class RegistrationResponse final :
   typedef void DestructorSkippable_;
   struct Impl_ {
     ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::rpc::Ip > ip_;
+    ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string> service_;
     mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   };
   union { Impl_ _impl_; };
@@ -566,6 +612,91 @@ RegistrationRequest::mutable_providedservice() {
   return &_impl_.providedservice_;
 }
 
+// .rpc.Ip nginxIp = 3;
+inline bool RegistrationRequest::_internal_has_nginxip() const {
+  return this != internal_default_instance() && _impl_.nginxip_ != nullptr;
+}
+inline bool RegistrationRequest::has_nginxip() const {
+  return _internal_has_nginxip();
+}
+inline const ::rpc::Ip& RegistrationRequest::_internal_nginxip() const {
+  const ::rpc::Ip* p = _impl_.nginxip_;
+  return p != nullptr ? *p : reinterpret_cast<const ::rpc::Ip&>(
+      ::rpc::_Ip_default_instance_);
+}
+inline const ::rpc::Ip& RegistrationRequest::nginxip() const {
+  // @@protoc_insertion_point(field_get:rpc.RegistrationRequest.nginxIp)
+  return _internal_nginxip();
+}
+inline void RegistrationRequest::unsafe_arena_set_allocated_nginxip(
+    ::rpc::Ip* nginxip) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(_impl_.nginxip_);
+  }
+  _impl_.nginxip_ = nginxip;
+  if (nginxip) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:rpc.RegistrationRequest.nginxIp)
+}
+inline ::rpc::Ip* RegistrationRequest::release_nginxip() {
+  
+  ::rpc::Ip* temp = _impl_.nginxip_;
+  _impl_.nginxip_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::rpc::Ip* RegistrationRequest::unsafe_arena_release_nginxip() {
+  // @@protoc_insertion_point(field_release:rpc.RegistrationRequest.nginxIp)
+  
+  ::rpc::Ip* temp = _impl_.nginxip_;
+  _impl_.nginxip_ = nullptr;
+  return temp;
+}
+inline ::rpc::Ip* RegistrationRequest::_internal_mutable_nginxip() {
+  
+  if (_impl_.nginxip_ == nullptr) {
+    auto* p = CreateMaybeMessage<::rpc::Ip>(GetArenaForAllocation());
+    _impl_.nginxip_ = p;
+  }
+  return _impl_.nginxip_;
+}
+inline ::rpc::Ip* RegistrationRequest::mutable_nginxip() {
+  ::rpc::Ip* _msg = _internal_mutable_nginxip();
+  // @@protoc_insertion_point(field_mutable:rpc.RegistrationRequest.nginxIp)
+  return _msg;
+}
+inline void RegistrationRequest::set_allocated_nginxip(::rpc::Ip* nginxip) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::MessageLite*>(_impl_.nginxip_);
+  }
+  if (nginxip) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(
+                reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(nginxip));
+    if (message_arena != submessage_arena) {
+      nginxip = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, nginxip, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  _impl_.nginxip_ = nginxip;
+  // @@protoc_insertion_point(field_set_allocated:rpc.RegistrationRequest.nginxIp)
+}
+
 // -------------------------------------------------------------------
 
 // RegistrationResponse
@@ -605,6 +736,81 @@ inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::rpc::Ip >&
 RegistrationResponse::ip() const {
   // @@protoc_insertion_point(field_list:rpc.RegistrationResponse.ip)
   return _impl_.ip_;
+}
+
+// repeated string service = 2;
+inline int RegistrationResponse::_internal_service_size() const {
+  return _impl_.service_.size();
+}
+inline int RegistrationResponse::service_size() const {
+  return _internal_service_size();
+}
+inline void RegistrationResponse::clear_service() {
+  _impl_.service_.Clear();
+}
+inline std::string* RegistrationResponse::add_service() {
+  std::string* _s = _internal_add_service();
+  // @@protoc_insertion_point(field_add_mutable:rpc.RegistrationResponse.service)
+  return _s;
+}
+inline const std::string& RegistrationResponse::_internal_service(int index) const {
+  return _impl_.service_.Get(index);
+}
+inline const std::string& RegistrationResponse::service(int index) const {
+  // @@protoc_insertion_point(field_get:rpc.RegistrationResponse.service)
+  return _internal_service(index);
+}
+inline std::string* RegistrationResponse::mutable_service(int index) {
+  // @@protoc_insertion_point(field_mutable:rpc.RegistrationResponse.service)
+  return _impl_.service_.Mutable(index);
+}
+inline void RegistrationResponse::set_service(int index, const std::string& value) {
+  _impl_.service_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set:rpc.RegistrationResponse.service)
+}
+inline void RegistrationResponse::set_service(int index, std::string&& value) {
+  _impl_.service_.Mutable(index)->assign(std::move(value));
+  // @@protoc_insertion_point(field_set:rpc.RegistrationResponse.service)
+}
+inline void RegistrationResponse::set_service(int index, const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  _impl_.service_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:rpc.RegistrationResponse.service)
+}
+inline void RegistrationResponse::set_service(int index, const char* value, size_t size) {
+  _impl_.service_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:rpc.RegistrationResponse.service)
+}
+inline std::string* RegistrationResponse::_internal_add_service() {
+  return _impl_.service_.Add();
+}
+inline void RegistrationResponse::add_service(const std::string& value) {
+  _impl_.service_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:rpc.RegistrationResponse.service)
+}
+inline void RegistrationResponse::add_service(std::string&& value) {
+  _impl_.service_.Add(std::move(value));
+  // @@protoc_insertion_point(field_add:rpc.RegistrationResponse.service)
+}
+inline void RegistrationResponse::add_service(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  _impl_.service_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:rpc.RegistrationResponse.service)
+}
+inline void RegistrationResponse::add_service(const char* value, size_t size) {
+  _impl_.service_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:rpc.RegistrationResponse.service)
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>&
+RegistrationResponse::service() const {
+  // @@protoc_insertion_point(field_list:rpc.RegistrationResponse.service)
+  return _impl_.service_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>*
+RegistrationResponse::mutable_service() {
+  // @@protoc_insertion_point(field_mutable_list:rpc.RegistrationResponse.service)
+  return &_impl_.service_;
 }
 
 #ifdef __GNUC__

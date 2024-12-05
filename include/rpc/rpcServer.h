@@ -1,3 +1,4 @@
+#pragma once
 #include <rpcService.h>
 #include <rpcServiceStub.h>
 #include <muduo/net/TcpServer.h>

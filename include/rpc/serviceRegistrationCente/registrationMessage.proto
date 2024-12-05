@@ -6,9 +6,11 @@ message RegistrationRequest
 {
     repeated string requestedService=1;
     repeated string providedService=2;
+    Ip nginxIp=3;
 }
 
 message RegistrationResponse
 {
     repeated Ip ip=1;
+    repeated string service=2;
 }
