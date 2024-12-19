@@ -2,15 +2,20 @@ syntax = "proto3";
 import "Ip.proto";
 package rpc;
 
-message RegistrationRequest
+message RegistrationStartRequest  //请求服务中心
 {
     repeated string requestedService=1;
     repeated string providedService=2;
     Ip nginxIp=3;
 }
 
-message RegistrationResponse
+message RegistrationStartResponse
 {
     repeated Ip ip=1;
     repeated string service=2;
+}
+
+message RegistrationAddServiceArg 
+{
+    Ip ip=1;
 }

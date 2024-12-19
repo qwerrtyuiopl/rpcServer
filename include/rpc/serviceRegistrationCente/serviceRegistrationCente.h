@@ -9,6 +9,7 @@
 #include <functional>
 #include <registrationMessage.pb.h>
 #include <messageHeader.pb.h>
+#include<request.pb.h>
 
 namespace rpc
 {
@@ -22,13 +23,15 @@ namespace rpc
     private:
         void MessageCallback(const muduo::net::TcpConnectionPtr &, muduo::net::Buffer *, muduo::Timestamp);
         bool parseRequest(const muduo::net::TcpConnectionPtr &,muduo::net::Buffer *, RegistrationRequest &);
-        bool HandleRequest(const muduo::net::TcpConnectionPtr &, const RegistrationRequest &);
+        bool handleRequest(const muduo::net::TcpConnectionPtr &, const RegistrationRequest &);
         bool respondToRequest(const muduo::net::TcpConnectionPtr &, const RegistrationRequest &);
-        bool expandService(const RegistrationRequest &);
+        void handleService(const muduo::net::TcpConnectionPtr &,const RegistrationRequest &);
         int stringToUint(const std::string& str);
+        bool uintToString(unsigned int num,std::string& str,int len);
     private:
         muduo::net::TcpServer _server;
         muduo::net::EventLoop _loop;
-        oneapi::tbb::concurrent_unordered_map<RpcService, oneapi::tbb::concurrent_unordered_set<Ip>> _service;
+        oneapi::tbb::concurrent_unordered_map<std::string, oneapi::tbb::concurrent_unordered_set<Ip>> _providedServices;
+        oneapi::tbb::concurrent_unordered_map<std::string, oneapi::tbb::concurrent_unordered_set<const muduo::net::TcpConnectionPtr>> _requestedServices;
     };
 }
