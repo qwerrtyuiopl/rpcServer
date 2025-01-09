@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package rpc;
+
+import "Ip.proto"; // 导入 Ip.proto
+
+message UpdateNodeServiceArg {
+    Ip ip = 1;   
+    string serviceName = 2;
+}

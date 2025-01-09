@@ -3,6 +3,7 @@
 rpc::ServiceRegistrationCente::ServiceRegistrationCente(const muduo::net::InetAddress &address) : _server(&_loop, address, "ServiceRegistrationCente")
 {
     _server.setMessageCallback(std::bind(MessageCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+    _server.setConnectionCallback(std::bind(ConnectionCallback, this, std::placeholders::_1));
 }
 
 void rpc::ServiceRegistrationCente::start()
@@ -11,11 +12,49 @@ void rpc::ServiceRegistrationCente::start()
     _loop.loop();
 }
 
-void rpc::ServiceRegistrationCente::MessageCallback(const muduo::net::TcpConnectionPtr &, muduo::net::Buffer *, muduo::Timestamp)
+void rpc::ServiceRegistrationCente::MessageCallback(const muduo::net::TcpConnectionPtr &conn, muduo::net::Buffer *buffer, muduo::Timestamp timestamp)
 {
+    RegistrationRequest request;
+    if(!parseRequest(conn, buffer, request))
+    {
+        return;
+    }
+    if (!handleRequest(conn, request))
+    {
+        return;
+    }
+}
+void rpc::ServiceRegistrationCente::ConnectionCallback(const muduo::net::TcpConnectionPtr &conn)
+{
+    if(conn->disconnected())
+    {
+        RegistrationRequest request;
+        try
+        {
+           request=boost::any_cast<RegistrationRequest>(conn->getContext());
+        }
+        catch(const std::exception& e)
+        {
+            exit(1);
+        }
+        
+        Ip ip=request.nginxip();
+        if(--_refCount[ip] == 0)
+        {
+            for (int i = 0; i < request.providedservice().size(); i++)
+            {
+                _providedServices[request.providedservice()[i]].erase(ip);
+                for (auto it = _requestedServices[request.providedservice()[i]].begin(); it != _requestedServices[request.providedservice()[i]].end(); it++)
+                {
+                    updateNodeService(*it, ip, request.providedservice()[i], false);
+                }
+            }
+            _refCount.erase(ip);
+        }
+    }
 }
 /*
-解析错误关闭连接(数据不足保留数据不会关闭连接)
+解析错误关闭连接(数据不足保留数据会关闭连接)
 */
 bool rpc::ServiceRegistrationCente::parseRequest(const muduo::net::TcpConnectionPtr &conn, muduo::net::Buffer *buffer, RegistrationRequest &request)
 {
@@ -51,9 +90,17 @@ bool rpc::ServiceRegistrationCente::parseRequest(const muduo::net::TcpConnection
     return true;
 }
 
-bool rpc::ServiceRegistrationCente::handleRequest(const muduo::net::TcpConnectionPtr &, const RegistrationRequest &)
+bool rpc::ServiceRegistrationCente::handleRequest(const muduo::net::TcpConnectionPtr &conn, const RegistrationRequest &request)
 {
-    return false;
+    if(respondToRequest(conn, request))
+    {
+        updateService(conn, request);
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 bool rpc::ServiceRegistrationCente::respondToRequest(const muduo::net::TcpConnectionPtr &conn, const RegistrationRequest &request)
@@ -88,19 +135,60 @@ bool rpc::ServiceRegistrationCente::respondToRequest(const muduo::net::TcpConnec
     conn->send(resposeS);
     return true;
 }
-
-void rpc::ServiceRegistrationCente::handleService(const muduo::net::TcpConnectionPtr &conn, const RegistrationRequest &request)
+/*记录请求服务与提供的服务，并向其他节点跟新*/
+void rpc::ServiceRegistrationCente::updateService(const muduo::net::TcpConnectionPtr &conn, const RegistrationRequest &request)
 {
     const google::protobuf::RepeatedPtrField<std::string> requestedservice = request.requestedservice();
     const google::protobuf::RepeatedPtrField<std::string> providedServices = request.providedservice();
-    for (int i = 0; i < requestedservice.size(); i++)
+    if (_refCount.find(request.nginxip()) != _refCount.end())
     {
-        _requestedServices[requestedservice[i]].insert(conn);
+        _refCount[request.nginxip()]++;
+        conn->setContext(request);
+    }
+    else
+    {
+        for (int i = 0; i < providedServices.size(); i++)
+        {
+            _providedServices[providedServices[i]].insert(request.nginxip());
+            for (auto it = _requestedServices[providedServices[i]].begin(); it != _requestedServices[providedServices[i]].end(); it++)
+            {
+                updateNodeService(conn, request.nginxip(), providedServices[i],true);
+            }
+        }
+        _refCount[request.nginxip()] = 1;
     }
     for (int i = 0; i < requestedservice.size(); i++)
     {
         _requestedServices[requestedservice[i]].insert(conn);
     }
+}
+void rpc::ServiceRegistrationCente::updateNodeService(const muduo::net::TcpConnectionPtr &conn, const Ip &ip, const std::string& serviceName, bool meothod)
+{
+    MessageHeader header;
+    Request request;
+    UpdateNodeServiceArg arg;
+    arg.set_servicename(serviceName);
+    arg.set_allocated_ip(ip.New());
+    request.set_servicename("updateNodeService");
+    if(meothod)
+    {
+        request.set_methodname("addNodeService");
+    }
+    else
+    {
+        request.set_methodname("delNodeService");
+    }
+    std::string requestS = request.SerializeAsString();
+    std::string argS = arg.SerializeAsString();
+    std::string headerS = header.SerializeAsString();
+    header.set_request_size(requestS.size());
+    header.set_arg_size(argS.size());
+    std::string headerSizeS;
+    uintToString(headerS.size(), headerSizeS, 4);
+    conn->send(headerSizeS);
+    conn->send(header.SerializeAsString());
+    conn->send(requestS);
+    conn->send(argS);
 }
 /*
 非法字符串返回-1

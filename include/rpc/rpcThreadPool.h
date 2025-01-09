@@ -91,7 +91,7 @@ namespace rpc
     private:
         std::vector<std::function<void()>> _functions;
         pthread_t _thread;
-        std::atomic_bool _isStart = false;
+        std::atomic_bool _isStart;
         pid_t _threadId;
         sem_t _sem;
         muduo::MutexLock _lock;

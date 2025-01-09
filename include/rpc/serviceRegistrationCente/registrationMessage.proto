@@ -15,7 +15,8 @@ message RegistrationStartResponse
     repeated string service=2;
 }
 
-message RegistrationAddServiceArg 
+message RegistrationUpdateServiceArg 
 {
     Ip ip=1;
+    bool flog=2;
 }

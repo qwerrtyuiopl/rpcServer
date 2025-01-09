@@ -16,7 +16,7 @@ namespace rpc
         {
         }
         const std::string &get_name() { return _name; }
-        virtual RpcMethod *get_method(std::string &name) = 0;
+        virtual RpcMethod *get_method(std::string &methodName) = 0;
     private:
         const std::string _name;
     };
